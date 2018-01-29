@@ -41,19 +41,15 @@ def prepare_mask_tif():
         dst_ds1.SetGeoTransform(ds.GetGeoTransform())
 
         ## get resized img
-        # out_path2 = "./out_path/resized/" + image_id + ".tif"
-        # img2 = ds.ReadAsArray()
-        # img2 = resize_original_im(img2)
-        # dst_ds2 = driver.Create(out_path2,650,650,3,gdal.GDT_Byte)
-        # for i in range(1,img2.shape[2]+1):
-        #     dst_ds2.GetRasterBand(i).WriteArray(img2[:,:,i-1])
-        #     dst_ds2.GetRasterBand(i).ComputeStatistics(False)
-        # dst_ds2.SetProjection(ds.GetProjection())
-        # dst_ds2.SetGeoTransform(ds.GetGeoTransform())
-
-        # pyplot.imshow(mask)
-        # pyplot.show()
-
+        out_path2 = "./out_path/resized/" + image_id + ".tif"
+        img2 = ds.ReadAsArray()
+        img2 = resize_original_im(img2)
+        dst_ds2 = driver.Create(out_path2,650,650,3,gdal.GDT_Byte)
+        for i in range(1,img2.shape[2]+1):
+            dst_ds2.GetRasterBand(i).WriteArray(img2[:,:,i-1])
+            dst_ds2.GetRasterBand(i).ComputeStatistics(False)
+        dst_ds2.SetProjection(ds.GetProjection())
+        dst_ds2.SetGeoTransform(ds.GetGeoTransform())
 
 def image_mask_resized_from_summary(df, image_id):
     im_mask = np.zeros((650, 650))
