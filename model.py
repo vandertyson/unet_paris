@@ -1,7 +1,7 @@
 from tf_unet import unet, util, image_util
 
 #preparing data loading
-data_provider = image_util.ImageDataProvider(data_suffix=u"outpath/resized/*.tif",mask_suffix=u"outpath/mask/*_mask.tif")
+data_provider = image_util.ImageDataProvider(data_suffix=u"out_path/resized/*.tif",mask_suffix=u"out_path/mask/*_mask.tif")
 
 #setup & training
 output_path = "./out_path/model"
