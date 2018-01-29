@@ -25,7 +25,7 @@ def prepare_mask_tif():
     ids = pd.DataFrame(df)['ImageId'].unique()
     for image_id in ids[0:10]:        
         mask = image_mask_resized_from_summary(df_summary, image_id)
-        im_path = "/data/train/AOI_3_Paris/RGB_PanSharpen_" + image_id + ".tif"
+        im_path = "/data/train/AOI_3_Paris_Train/RGB-PanSharpen/RGB-PanSharpen_" + image_id + ".tif"
         # im_path = "./RGB-PanSharpen_AOI_3_Paris_img197.tif"
         out_path1 = "./out_path/mask/" + image_id + "_mask.tif"
         # im_path = "/data/train/AOI_3_Paris/RGB_PanSharpen_" + image_id + ".tif"
@@ -70,7 +70,7 @@ def image_mask_resized_from_summary(df, image_id):
                 yy, xx = skimage.draw.polygon(y, x, (650, 650))
                 im_mask[yy, xx] = 0
     # im_mask = skimage.transform.resize(im_mask, (INPUT_SIZE, INPUT_SIZE))
-    im_mask = (im_mask > 0.5).astype(np.uint8)
+    # im_mask = (im_mask > 0.5).astype(np.uint8)
     return im_mask
 
 
