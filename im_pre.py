@@ -15,8 +15,19 @@ FN_MASK_CSV = "./AOI_3_Paris_Train_Building_Solutions.csv"
 FN_RGB = "/data/train/AOI_3_Paris"
 INPUT_SIZE = 256
 
-def resize_original_im(img):
-    img = np.array(img).swapaxes(0,1).swapaxes(1,2)    
+def resize_original_im(data):
+    data3 = np.asarray(data, dtype=np.float32)
+    bandstats = {k: dict(max=0, min=0) for k in range(3)}
+    for i in range(3):
+        bandstats[i]['min'] = scipy.percentile(data3[i], 2)
+        bandstats[i]['max'] = scipy.percentile(data3[i], 98)
+    
+    for chan_i in range(3):
+        min_val = bandstats[chan_i]['min']
+        max_val = bandstats[chan_i]['max']
+        data3[chan_i] = np.clip(data3[chan_i], min_val, max_val)
+        data3[chan_i] = (data3[chan_i] - min_val)/(max_val-min_val)*255
+    img = np.array(data3).swapaxes(0,1).swapaxes(1,2)  
     return img
 
 def prepare_mask_tif():
@@ -44,7 +55,7 @@ def prepare_mask_tif():
         out_path2 = "./out_path/resized/" + image_id + ".tif"
         img2 = ds.ReadAsArray()
         img2 = resize_original_im(img2)
-        dst_ds2 = driver.Create(out_path2,650,650,3,gdal.GDT_Byte)
+        dst_ds2 = driver.Create(out_path2,650,650,3,gdal.GDT_UInt16)
         for i in range(1,img2.shape[2]+1):
             dst_ds2.GetRasterBand(i).WriteArray(img2[:,:,i-1])
             dst_ds2.GetRasterBand(i).ComputeStatistics(False)
